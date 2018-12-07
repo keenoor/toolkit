@@ -1,5 +1,7 @@
 toolkit for java
 ---
+[ ![Download](https://api.bintray.com/packages/truthpure/maven/toolkit/images/download.svg) ](https://bintray.com/truthpure/maven/toolkit/_latestVersion)
+
 one commonly used utils lib for java, its come from every good idea.
 
 ## upload to bintray cmd
