@@ -1,0 +1,53 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.novoda:bintray-release:0.9'
+    }
+}
+
+plugins {
+    id 'java'
+}
+apply plugin: 'com.novoda.bintray-release' // must be applied after your artifact generating plugin (eg. java / com.android.library)
+
+group 'com.keenoor'
+version '0.0.3'
+
+sourceCompatibility = 1.8
+
+tasks.withType(Javadoc) {
+    options.addBooleanOption('Xdoclint:none', true)
+    options.encoding 'UTF-8'
+//    options.charSet 'UTF-8'
+}
+
+publish {
+    userOrg = 'truthpure' // bintray 注册的用户名
+    groupId = project.group
+    artifactId = rootProject.name // bintray 创建的package
+    publishVersion = project.version
+    desc = 'This is a java util for quickly develop web app'
+    website = 'https://github.com/novoda/bintray-release'
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    compile 'org.apache.commons:commons-lang3:3.7'
+    compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
+    compile group: 'com.google.guava', name: 'guava', version: '25.1-jre'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    compile 'com.alibaba:fastjson:1.2.49'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.5'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+
+}
+
