@@ -13,10 +13,11 @@ plugins {
 apply plugin: 'com.novoda.bintray-release' // must be applied after your artifact generating plugin (eg. java / com.android.library)
 
 group 'com.keenoor'
-version '0.0.3'
+version '0.0.4'
 
 sourceCompatibility = 1.8
 
+// 忽略 javadoc 报警产生的中断
 tasks.withType(Javadoc) {
     options.addBooleanOption('Xdoclint:none', true)
     options.encoding 'UTF-8'
@@ -29,7 +30,7 @@ publish {
     artifactId = rootProject.name // bintray 创建的package
     publishVersion = project.version
     desc = 'This is a java util for quickly develop web app'
-    website = 'https://github.com/novoda/bintray-release'
+    website = 'https://github.com/keenoor/toolkit'
 }
 
 repositories {
