@@ -2,8 +2,10 @@ package com.keenoor.toolkit.utils;
 
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.TypeUtils;
 
 import java.lang.reflect.ParameterizedType;
@@ -19,10 +21,19 @@ import java.util.Map;
 
 public class GsonUtil {
 
-    protected static final Gson gson = new Gson();
+    private static final String PATTERN_DAY = "yyyy-MM-dd";
+
+    private static final Gson gson = new Gson();
 
     public static String toJson(Object object) {
         return GsonUtil.gson.toJson(object);
+    }
+
+    public static String toJsonWithDay(Object object, String pattern) {
+        Gson gson = new GsonBuilder()
+                .setDateFormat(StringUtils.isBlank(pattern) ? PATTERN_DAY : pattern)
+                .create();
+        return gson.toJson(object);
     }
 
     public static <T> T parseObj(String json, Class<T> clazz) {
