@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -17,7 +16,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.ssl.SSLInitializationException;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,50 +37,47 @@ import java.util.Map;
 public class HttpClientUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
-    private static final Charset UTF_8 = Charset.forName("UTF-8");
 
     private static final int CONNECT_TIMEOUT = 5_000;
     private static final int REQUEST_TIMEOUT = 5_000;
     private static final int SOCKET_TIMEOUT = 20_000;
 
-    private volatile static CloseableHttpClient httpClient;
+    private volatile static HttpClientBuilder builder;
+    private volatile static RequestConfig requestConfig;
+
+    public static void setConfig(RequestConfig config) {
+        HttpClientUtil.requestConfig = config;
+    }
 
     private HttpClientUtil() {
     }
 
-    private static CloseableHttpClient getHttpClient(String url) {
-        if (httpClient == null) {
+    private static HttpClientBuilder getClientBuilder() {
+        if (builder == null) {
             synchronized (HttpClientUtil.class) {
-                if (httpClient == null) {
-                    if (url.startsWith("https://")) {
-                        try {
-                            httpClient = new SSLClient();
-                        } catch (KeyManagementException | NoSuchAlgorithmException e) {
-                            e.printStackTrace();
-                            throw new SSLInitializationException("new SSLClient error: ", e);
-                        }
-                    }else{
-                        RequestConfig requestConfig = RequestConfig.custom()
+                if (builder == null) {
+                    if (requestConfig == null) {
+                        requestConfig = RequestConfig.custom()
                                 .setConnectTimeout(CONNECT_TIMEOUT)
                                 .setConnectionRequestTimeout(REQUEST_TIMEOUT)
                                 .setSocketTimeout(SOCKET_TIMEOUT)
                                 .build();
-                        httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
                     }
+                    builder = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig);
                 }
             }
         }
-        return httpClient;
+        return builder;
     }
 
-    public static String get(String url) throws RequestException {
+    public static String get(String url) throws HttpRequestException {
         return get(url, null);
     }
 
-    public static String get(String url, Map<String, Object> params) throws RequestException {
+    public static String get(String url, Map<String, Object> params) throws HttpRequestException {
 
         // 创建Httpclient对象
-        CloseableHttpClient httpclient = getHttpClient(url);
+        CloseableHttpClient httpclient = getClientBuilder().build();
         CloseableHttpResponse response = null;
 
         try {
@@ -96,7 +89,7 @@ public class HttpClientUtil {
                 }
             }
             URI uri = builder.build();
-            logger.info("HTTP GET: {}", uri.toString());
+            logger.info("HTTP-GET-URI: {}", uri.toString());
 
             // 创建http GET请求
             HttpGet httpGet = new HttpGet(uri);
@@ -105,27 +98,26 @@ public class HttpClientUtil {
             return handleResponse(response);
         } catch (URISyntaxException | IOException e) {
             logger.error("", e);
-            throw new ParseException();
+            throw new HttpRequestException(e);
         } finally {
             HttpClientUtils.closeQuietly(response);
         }
     }
 
-    public static String post(String url) throws RequestException {
+    public static String post(String url) throws HttpRequestException {
         return post(url, null);
     }
 
-    public static String post(String url, Map<String, Object> params) throws RequestException {
+    public static String post(String url, Map<String, Object> params) throws HttpRequestException {
 
-        logger.info("HTTP POST: {}", url);
+        logger.info("HTTP-POST-URL: {}", url);
         if (params != null) {
-            logger.info("HTTP POST, params: {}", params);
+            logger.info("HTTP-POST-PARAMS: {}", params);
         }
 
         // 创建Httpclient对象
-        CloseableHttpClient httpClient = getHttpClient(url);
+        CloseableHttpClient httpClient = getClientBuilder().build();
         CloseableHttpResponse response = null;
-        String resultString = "";
 
         // 创建Http Post请求
         HttpPost httpPost = new HttpPost(url);
@@ -136,7 +128,7 @@ public class HttpClientUtil {
                 paramList.add(new BasicNameValuePair(entry.getKey(), String.valueOf(entry.getValue())));
             }
             // 模拟表单
-            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(paramList, UTF_8);
+            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(paramList, StandardCharsets.UTF_8);
             httpPost.setEntity(entity);
         }
 
@@ -146,24 +138,23 @@ public class HttpClientUtil {
             return handleResponse(response);
         } catch (IOException e) {
             logger.error("", e);
-            throw new ParseException();
+            throw new HttpRequestException(e);
         } finally {
             HttpClientUtils.closeQuietly(response);
         }
     }
 
-    public static String postJson(String url, String json) throws RequestException {
+    public static String postJson(String url, String json) throws HttpRequestException {
 
-        logger.info("HTTP POST: {}", url);
+        logger.info("HTTP-POST-URL: {}", url);
         if (StringUtils.isEmpty(json)) {
-            throw new IllegalArgumentException("the param String json is empty");
+            throw new IllegalArgumentException("the param [String json] is empty");
         }
-        logger.info("POST PARAMS: {}", json);
+        logger.info("HTTP-POST-PARAMS: {}", json);
 
         // 创建Httpclient对象
-        CloseableHttpClient httpClient = getHttpClient(url);
+        CloseableHttpClient httpClient = getClientBuilder().build();
         CloseableHttpResponse response = null;
-        String resultString = "";
         try {
             // 创建Http Post请求
             HttpPost httpPost = new HttpPost(url);
@@ -175,26 +166,26 @@ public class HttpClientUtil {
             return handleResponse(response);
         } catch (IOException e) {
             logger.error("", e);
-            throw new ParseException();
+            throw new HttpRequestException(e);
         } finally {
             HttpClientUtils.closeQuietly(response);
         }
     }
 
-    private static String handleResponse(HttpResponse response) throws RequestException {
+    private static String handleResponse(HttpResponse response) throws HttpRequestException {
         // 判断返回状态是否为200
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             String result;
             try {
-                result = EntityUtils.toString(response.getEntity(), UTF_8);
+                result = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
             } catch (IOException e) {
                 logger.error("", e);
-                throw new ParseException();
+                throw new HttpRequestException(e);
             }
-            logger.info("HTTP RESPONSE: {}", result);
+            logger.info("HTTP-RESPONSE: {}", result);
             return result;
         } else {
-            throw new RequestException(response.getStatusLine());
+            throw new HttpRequestException(response.getStatusLine());
         }
     }
 

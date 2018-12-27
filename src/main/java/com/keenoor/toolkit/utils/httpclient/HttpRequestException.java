@@ -1,6 +1,5 @@
 package com.keenoor.toolkit.utils.httpclient;
 
-import org.apache.http.HttpException;
 import org.apache.http.StatusLine;
 
 /**
@@ -11,23 +10,29 @@ import org.apache.http.StatusLine;
  * Date       Author       Version     Description
  * -----------------------------------------------------
  */
-public class RequestException extends HttpException {
+public class HttpRequestException extends Exception {
+
+    private static final long serialVersionUID = -2806676512612298459L;
 
     private StatusLine statusLine;
 
-    public RequestException() {
+    public HttpRequestException() {
         super();
     }
 
-    public RequestException(StatusLine statusLine) {
+    public HttpRequestException(StatusLine statusLine) {
         this.statusLine = statusLine;
     }
 
-    public RequestException(String message) {
+    public HttpRequestException(String message) {
         super(message);
     }
 
-    public RequestException(String message, Throwable cause) {
+    public HttpRequestException(Throwable cause) {
+        super(cause);
+    }
+
+    public HttpRequestException(String message, Throwable cause) {
         super(message, cause);
     }
 

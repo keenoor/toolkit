@@ -39,16 +39,16 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'junit:junit:4.12'
 
-    compile 'org.apache.commons:commons-lang3:3.7'
-    compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
-    compile group: 'com.google.guava', name: 'guava', version: '25.1-jre'
+    implementation 'org.apache.commons:commons-lang3:3.7'
+    implementation 'commons-collections:commons-collections:3.2.2'
+    implementation 'com.google.guava:guava:25.1-jre'
     implementation 'com.google.code.gson:gson:2.8.5'
-    compile 'com.alibaba:fastjson:1.2.49'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.5'
-    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    implementation 'com.alibaba:fastjson:1.2.49'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.3'
+    implementation 'org.slf4j:slf4j-api:1.7.25'
 
 }
 

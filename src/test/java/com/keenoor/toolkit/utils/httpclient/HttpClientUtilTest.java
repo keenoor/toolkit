@@ -3,6 +3,7 @@ package com.keenoor.toolkit.utils.httpclient;
 import com.google.common.collect.Maps;
 import com.google.gson.reflect.TypeToken;
 import com.keenoor.toolkit.utils.GsonUtil;
+import com.keenoor.toolkit.utils.model.AccountAddress;
 import com.keenoor.toolkit.utils.model.MwResult;
 
 import org.junit.Test;
@@ -19,23 +20,23 @@ import java.util.HashMap;
  */
 public class HttpClientUtilTest {
 
-    String url = "http://192.168.2.33:9999";
+    String url = "http://192.168.2.38:9999";
 
     @Test
     public void get() {
-        String url = "http://192.168.2.33:9999/common/blockNumber.json";
+        String url = "http://192.168.2.38:9999/common/blockNumber.json";
         HashMap<String, Object> map = Maps.newHashMap();
         map.put("aa", 2);
         map.put("bb", "fsfdsfsdf");
         String result;
         try {
             result = HttpClientUtil.get(url, map);
-        } catch (RequestException e) {
+        } catch (HttpRequestException e) {
             throw new RuntimeException(e);
         }
 
         System.out.println(GsonUtil.parseType(result, new TypeToken<MwResult<Long>>() {
-        }));
+        }).getDetail());
     }
 
     @Test
@@ -47,10 +48,11 @@ public class HttpClientUtilTest {
         String result;
         try {
             result = HttpClientUtil.postJson(url, GsonUtil.toJson(map));
-        } catch (RequestException e) {
+        } catch (HttpRequestException e) {
             throw new RuntimeException(e);
         }
 
+        System.out.println("result: "+result);
     }
 
     @Test
@@ -64,12 +66,12 @@ public class HttpClientUtilTest {
         String result;
         try {
             result = HttpClientUtil.postJson(url + path, params);
-        } catch (RequestException e) {
+        } catch (HttpRequestException e) {
             throw new RuntimeException(e.getStatusLine().toString(), e);
         }
 
-//        MwResult<AccountAddress> mwResult = GsonUtil.parseType(result, MwResult.class, AccountAddress.class);
+        MwResult<AccountAddress> mwResult = GsonUtil.parseType(result, new TypeToken<MwResult<AccountAddress>>(){});
 
-//        System.out.println(GsonUtil.toJson(mwResult));
+        System.out.println(GsonUtil.toJson(mwResult));
     }
 }
