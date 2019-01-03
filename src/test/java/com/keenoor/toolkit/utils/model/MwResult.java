@@ -34,4 +34,12 @@ public class MwResult<T> implements Serializable {
     public void setDetail(T detail) {
         this.detail = detail;
     }
+
+    @Override
+    public String toString() {
+        return "MwResult{" +
+                "code='" + code + '\'' +
+                ", detail=" + detail +
+                '}';
+    }
 }

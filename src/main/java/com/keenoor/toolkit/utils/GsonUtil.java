@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.TypeUtils;
 
+import java.io.Reader;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,10 @@ public class GsonUtil {
         return GsonUtil.gson.fromJson(json, clazz);
     }
 
+    public static <T> T parseObj(Reader reader, Class<T> clazz) {
+        return GsonUtil.gson.fromJson(reader, clazz);
+    }
+
     public static <T> T[] parseArray(String json, Class<T[]> clazz) {
         return GsonUtil.gson.fromJson(json, clazz);
     }
@@ -62,6 +67,10 @@ public class GsonUtil {
 
     public static <T> T parseType(String json, TypeToken<T> type) {
         return GsonUtil.gson.fromJson(json, type.getType());
+    }
+
+    public static <T> T parseType(Reader reader, TypeToken<T> type) {
+        return GsonUtil.gson.fromJson(reader, type.getType());
     }
 
 }

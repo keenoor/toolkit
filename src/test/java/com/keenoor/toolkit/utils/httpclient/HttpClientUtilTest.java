@@ -3,7 +3,6 @@ package com.keenoor.toolkit.utils.httpclient;
 import com.google.common.collect.Maps;
 import com.google.gson.reflect.TypeToken;
 import com.keenoor.toolkit.utils.GsonUtil;
-import com.keenoor.toolkit.utils.model.AccountAddress;
 import com.keenoor.toolkit.utils.model.MwResult;
 
 import org.junit.Test;
@@ -28,50 +27,49 @@ public class HttpClientUtilTest {
         HashMap<String, Object> map = Maps.newHashMap();
         map.put("aa", 2);
         map.put("bb", "fsfdsfsdf");
-        String result;
+        MwResult<Long> result = null;
         try {
-            result = HttpClientUtil.get(url, map);
+            result = HttpClientUtil.<MwResult<Long>>get(url).params(map).type(new TypeToken<MwResult<Long>>() {
+            }).execute();
         } catch (HttpRequestException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
-        System.out.println(GsonUtil.parseType(result, new TypeToken<MwResult<Long>>() {
-        }).getDetail());
-    }
-
-    @Test
-    public void post() {
-        String url = "http://192.168.2.23:9900/admin/login.json";
-        HashMap<String, Object> map = Maps.newLinkedHashMap();
-        map.put("user", "admin");
-        map.put("password", "admin123456");
-        String result;
-        try {
-            result = HttpClientUtil.postJson(url, GsonUtil.toJson(map));
-        } catch (HttpRequestException e) {
-            throw new RuntimeException(e);
-        }
-
-        System.out.println("result: "+result);
+        System.out.println("result: " + result.getDetail());
     }
 
     @Test
     public void postJson() {
-        String path = "/common/contract.json";
-        String params = "{\n" +
-                "  \"contractAddress\": \"30df390d913e070af7c95df597420d8bb3da9d48\",\n" +
-                "  \"functionName\": \"getAccountAddressByAccountId\",\n" +
-                "  \"params\": [100000128]\n" +
-                "}\n";
-        String result;
+        String url = "http://192.168.2.23:9900/admin/login.json";
+        HashMap<String, Object> map = Maps.newLinkedHashMap();
+        map.put("user", "admin");
+        map.put("password", "admin123456");
+        MwResult<Long> result;
         try {
-            result = HttpClientUtil.postJson(url + path, params);
+            result = HttpClientUtil.<MwResult<Long>>post(url).json(GsonUtil.toJson(map)).type(new TypeToken<MwResult<Long>>() {
+            }).execute();
         } catch (HttpRequestException e) {
-            throw new RuntimeException(e.getStatusLine().toString(), e);
+            throw new RuntimeException(e);
         }
 
-        MwResult<AccountAddress> mwResult = GsonUtil.parseType(result, new TypeToken<MwResult<AccountAddress>>(){});
-
-        System.out.println(GsonUtil.toJson(mwResult));
+        System.out.println("result: " + result);
     }
+
+    @Test
+    public void post() {
+        String url = "http://localhost:8050/test/post";
+        HashMap<String, Object> map = Maps.newLinkedHashMap();
+        map.put("user", "admin");
+        map.put("password", "admin123456");
+        MwResult<Void> result;
+        try {
+            result = HttpClientUtil.<MwResult<Void>>post(url).json(GsonUtil.toJson(map)).type(new TypeToken<MwResult<Void>>() {
+            }).execute();
+        } catch (HttpRequestException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("result: " + result);
+    }
+
 }
