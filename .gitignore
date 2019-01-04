@@ -30,4 +30,4 @@ mvnw.cmd
 /logs
 
 # 账号文件 exclude
-!/gradle.properties
+gradle.properties
