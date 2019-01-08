@@ -13,7 +13,7 @@ plugins {
 apply plugin: 'com.novoda.bintray-release' // must be applied after your artifact generating plugin (eg. java / com.android.library)
 
 group 'com.keenoor'
-version '0.0.5'
+version '0.0.6'
 
 sourceCompatibility = 1.8
 
@@ -41,14 +41,14 @@ repositories {
 dependencies {
     testCompile 'junit:junit:4.12'
 
-    implementation 'org.apache.commons:commons-lang3:3.7'
-    implementation 'commons-io:commons-io:2.6'
+    compile 'org.apache.commons:commons-lang3:3.7'
+    compile 'commons-io:commons-io:2.6'
     implementation 'commons-collections:commons-collections:3.2.2'
     implementation 'com.google.guava:guava:25.1-jre'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.alibaba:fastjson:1.2.49'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
-    implementation 'org.apache.httpcomponents:httpclient:4.5.3'
+    compile 'org.apache.httpcomponents:httpclient:4.5.3'
     implementation 'org.slf4j:slf4j-api:1.7.25'
     implementation 'ch.qos.logback:logback-classic:1.2.3'
 

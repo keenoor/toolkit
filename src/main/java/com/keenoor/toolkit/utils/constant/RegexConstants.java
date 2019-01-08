@@ -55,6 +55,10 @@ public final class RegexConstants {
      * 正则：IP地址
      */
     public static final String REGEX_IP = "((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)";
+    /**
+     * 正则：版本号，三位：xx.xx.xx
+     */
+    public static final String REGEX_VERSION = "^([1-9]\\d|\\d)(\\.([1-9]\\d|\\d)){2}$";
 
     /**
      * 端口号，0-65535
