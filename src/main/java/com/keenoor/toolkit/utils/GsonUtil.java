@@ -3,6 +3,7 @@ package com.keenoor.toolkit.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
@@ -71,6 +72,10 @@ public class GsonUtil {
 
     public static <T> T parseType(Reader reader, TypeToken<T> type) {
         return GsonUtil.gson.fromJson(reader, type.getType());
+    }
+
+    public static <T> T parseType(JsonElement jsonElement, TypeToken<T> type) {
+        return GsonUtil.gson.fromJson(jsonElement, type.getType());
     }
 
 }
