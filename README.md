@@ -24,3 +24,5 @@ one commonly used utils lib for java, its come from every good idea.
 ## Version History
 - 0.0.4 第一个稳定版
 - 0.0.5 HttpClientUtil 方法变化较大，不兼容早期
+- 0.0.6
+- 0.0.7 update GsonUtil
