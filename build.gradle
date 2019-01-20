@@ -13,7 +13,7 @@ plugins {
 apply plugin: 'com.novoda.bintray-release' // must be applied after your artifact generating plugin (eg. java / com.android.library)
 
 group 'com.keenoor'
-version '0.0.6'
+version '0.0.7'
 
 sourceCompatibility = 1.8
 
