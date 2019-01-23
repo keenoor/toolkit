@@ -6,7 +6,7 @@ one commonly used utils lib for java, its come from every good idea.
 
 ## upload to bintray cmd
 ``
-./gradlew clean build -x test generatePomFileForMavenPublication publishMavenPublicationToMavenLocal bintrayUpload -PbintrayUser=truthpure -PbintrayKey=BINTRAY_KEY -PdryRun=false
+gradlew clean build -x test generatePomFileForMavenPublication publishMavenPublicationToMavenLocal bintrayUpload -PbintrayUser=truthpure -PbintrayKey=BINTRAY_KEY -PdryRun=false
 ``
 
 ## Version History
@@ -15,6 +15,7 @@ one commonly used utils lib for java, its come from every good idea.
 - 0.0.6
 - 0.0.8 update GsonUtil
 - 0.0.9 update HttpClientUtil: 增加两个运行时异常抛出
+- 0.1.0 update HttpClientUtil: 可设置自定义的 builder
 
 ## tips
 1. version cannot conflict every time when you upload

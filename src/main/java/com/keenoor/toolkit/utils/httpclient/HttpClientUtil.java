@@ -1,7 +1,5 @@
 package com.keenoor.toolkit.utils.httpclient;
 
-import com.google.gson.Gson;
-
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
@@ -21,35 +19,27 @@ public class HttpClientUtil {
     private static final int REQUEST_TIMEOUT = 5_000;
     private static final int SOCKET_TIMEOUT = 20_000;
 
-    private volatile static HttpClientBuilder builder;
-    private volatile static RequestConfig requestConfig;
+    private static HttpClientBuilder builder;
 
-    private static final Gson gson = new Gson();
-    
     static {
-        requestConfig = RequestConfig.custom()
+        RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(CONNECT_TIMEOUT)
                 .setConnectionRequestTimeout(REQUEST_TIMEOUT)
                 .setSocketTimeout(SOCKET_TIMEOUT)
                 .build();
+        builder = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig);
     }
 
     public static void setConfig(RequestConfig config) {
-        HttpClientUtil.requestConfig = config;
+        builder = HttpClientBuilder.create().setDefaultRequestConfig(config);
     }
 
-    private HttpClientUtil() {
+    static void setBuilder(HttpClientBuilder builder) {
+        HttpClientUtil.builder = builder;
     }
 
     static HttpClientBuilder getClientBuilder() {
-        if (builder == null) {
-            synchronized (HttpClientUtil.class) {
-                if (builder == null) {
-                    builder = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig);
-                }
-            }
-        }
-        return builder;
+        return HttpClientUtil.builder;
     }
 
     public static <T> GetRequest<T> get(String url) {
