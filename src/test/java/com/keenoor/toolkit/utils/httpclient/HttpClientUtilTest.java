@@ -31,8 +31,9 @@ public class HttpClientUtilTest {
         try {
             result = HttpClientUtil.<MwResult<Long>>get(url).params(map).type(new TypeToken<MwResult<Long>>() {
             }).execute();
-        } catch (HttpRequestException e) {
+        } catch (HttpCodeException e) {
             e.printStackTrace();
+            System.out.println("hshs: " + e.getStatusLine().toString());
         }
 
         System.out.println("result: " + result.getDetail());
@@ -48,7 +49,7 @@ public class HttpClientUtilTest {
         try {
             result = HttpClientUtil.<MwResult<Long>>post(url).json(GsonUtil.toJson(map)).type(new TypeToken<MwResult<Long>>() {
             }).execute();
-        } catch (HttpRequestException e) {
+        } catch (HttpCodeException e) {
             throw new RuntimeException(e);
         }
 
@@ -65,7 +66,7 @@ public class HttpClientUtilTest {
         try {
             result = HttpClientUtil.<MwResult<Void>>post(url).json(GsonUtil.toJson(map)).type(new TypeToken<MwResult<Void>>() {
             }).execute();
-        } catch (HttpRequestException e) {
+        } catch (HttpCodeException e) {
             throw new RuntimeException(e);
         }
 

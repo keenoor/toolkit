@@ -53,9 +53,9 @@ public abstract class BaseRequest<T> {
         return this;
     }
 
-    public abstract T execute() throws HttpRequestException;
+    public abstract T execute() throws HttpCodeException;
 
-    T convertRsp(CloseableHttpResponse response) throws HttpRequestException {
+    T convertRsp(CloseableHttpResponse response) throws HttpCodeException {
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             try {
                 BufferedHttpEntity entity = new BufferedHttpEntity(response.getEntity());
@@ -70,10 +70,10 @@ public abstract class BaseRequest<T> {
                 }
             } catch (IOException e) {
                 logger.error("", e);
-                throw new HttpRequestException(e);
+                throw new HttpProcessException(e);
             }
         } else {
-            throw new HttpRequestException(response.getStatusLine());
+            throw new HttpCodeException(response.getStatusLine());
         }
     }
 

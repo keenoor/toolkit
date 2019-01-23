@@ -31,7 +31,7 @@ public class GetRequest<T> extends BaseRequest<T> {
     }
 
     @Override
-    public T execute() throws HttpRequestException {
+    public T execute() throws HttpCodeException {
         // 创建Httpclient对象
         CloseableHttpClient httpclient = HttpClientUtil.getClientBuilder().build();
         CloseableHttpResponse response = null;
@@ -54,7 +54,7 @@ public class GetRequest<T> extends BaseRequest<T> {
             return convertRsp(response);
         } catch (URISyntaxException | IOException e) {
             logger.error("", e);
-            throw new HttpRequestException(e);
+            throw new HttpConnException(e);
         } finally {
             HttpClientUtils.closeQuietly(response);
         }

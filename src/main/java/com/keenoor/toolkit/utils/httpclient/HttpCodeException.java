@@ -10,29 +10,29 @@ import org.apache.http.StatusLine;
  * Date       Author       Version     Description
  * -----------------------------------------------------
  */
-public class HttpRequestException extends Exception {
+public class HttpCodeException extends Exception {
 
     private static final long serialVersionUID = -2806676512612298459L;
 
     private StatusLine statusLine;
 
-    public HttpRequestException() {
+    public HttpCodeException() {
         super();
     }
 
-    public HttpRequestException(StatusLine statusLine) {
+    public HttpCodeException(StatusLine statusLine) {
         this.statusLine = statusLine;
     }
 
-    public HttpRequestException(String message) {
+    public HttpCodeException(String message) {
         super(message);
     }
 
-    public HttpRequestException(Throwable cause) {
+    public HttpCodeException(Throwable cause) {
         super(cause);
     }
 
-    public HttpRequestException(String message, Throwable cause) {
+    public HttpCodeException(String message, Throwable cause) {
         super(message, cause);
     }
 

@@ -43,7 +43,7 @@ public class PostRequest<T> extends BaseRequest<T> {
     }
 
     @Override
-    public T execute() throws HttpRequestException {
+    public T execute() throws HttpCodeException {
 
         logger.info("HTTP-POST-URL: {}", url);
         if (params != null) {
@@ -70,7 +70,7 @@ public class PostRequest<T> extends BaseRequest<T> {
         } else if (json !=null){
             entity = new StringEntity(json, ContentType.APPLICATION_JSON);
         } else {
-            throw new HttpRequestException("params and json cannot be null together");
+            throw new HttpCodeException("params and json cannot be null together");
         }
         httpPost.setEntity(entity);
 
@@ -80,7 +80,7 @@ public class PostRequest<T> extends BaseRequest<T> {
             return convertRsp(response);
         } catch (IOException e) {
             logger.error("", e);
-            throw new HttpRequestException(e);
+            throw new HttpCodeException(e);
         } finally {
             HttpClientUtils.closeQuietly(response);
         }
