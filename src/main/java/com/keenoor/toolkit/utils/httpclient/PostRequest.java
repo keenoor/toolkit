@@ -1,5 +1,6 @@
 package com.keenoor.toolkit.utils.httpclient;
 
+import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -32,9 +33,15 @@ public class PostRequest<T> extends BaseRequest<T> {
     private static final Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
 
     private String json;
+    private Header[] headers;
 
     PostRequest(String url) {
         super(url);
+    }
+
+    public PostRequest<T> setHeaders(List<Header> headerList) {
+        this.headers = headerList.toArray(new Header[]{});
+        return this;
     }
 
     public PostRequest<T> json(String json) {
@@ -48,7 +55,7 @@ public class PostRequest<T> extends BaseRequest<T> {
         logger.info("HTTP-POST-URL: {}", url);
         if (params != null) {
             logger.info("HTTP-POST-PARAMS: {}", params);
-        }else if (json !=null){
+        } else if (json != null) {
             logger.info("HTTP-POST-PARAMS: {}", json);
         }
 
@@ -67,12 +74,15 @@ public class PostRequest<T> extends BaseRequest<T> {
             }
             // 模拟表单
             entity = new UrlEncodedFormEntity(paramList, StandardCharsets.UTF_8);
-        } else if (json !=null){
+        } else if (json != null) {
             entity = new StringEntity(json, ContentType.APPLICATION_JSON);
         } else {
             throw new HttpCodeException("params and json cannot be null together");
         }
         httpPost.setEntity(entity);
+        if (headers != null) {
+            httpPost.setHeaders(headers);
+        }
 
         try {
             // 执行 http 请求

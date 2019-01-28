@@ -1,5 +1,6 @@
 package com.keenoor.toolkit.utils.httpclient;
 
+import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.HttpClientUtils;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,8 +28,15 @@ import java.util.Map;
 public class GetRequest<T> extends BaseRequest<T> {
     private static final Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
 
+    private Header[] headers;
+
     GetRequest(String url) {
         super(url);
+    }
+
+    public GetRequest<T> setHeaders(List<Header> headerList) {
+        this.headers = headerList.toArray(new Header[]{});
+        return this;
     }
 
     @Override
@@ -49,6 +58,11 @@ public class GetRequest<T> extends BaseRequest<T> {
 
             // 创建http GET请求
             HttpGet httpGet = new HttpGet(uri);
+
+            if (headers != null) {
+                httpGet.setHeaders(headers);
+            }
+
             // 执行请求
             response = httpclient.execute(httpGet);
             return convertRsp(response);

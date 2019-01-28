@@ -34,11 +34,11 @@ public class HttpClientUtil {
         builder = HttpClientBuilder.create().setDefaultRequestConfig(config);
     }
 
-    static void setBuilder(HttpClientBuilder builder) {
+    public static void setBuilder(HttpClientBuilder builder) {
         HttpClientUtil.builder = builder;
     }
 
-    static HttpClientBuilder getClientBuilder() {
+    public static HttpClientBuilder getClientBuilder() {
         return HttpClientUtil.builder;
     }
 
