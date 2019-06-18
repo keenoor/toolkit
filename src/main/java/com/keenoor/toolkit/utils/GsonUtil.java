@@ -24,8 +24,9 @@ import java.util.Map;
 public class GsonUtil {
 
     private static final String PATTERN_DAY = "yyyy-MM-dd";
+    public static final String PATTERN_TIME_STD = "yyyy-MM-dd HH:mm:ss";
 
-    private static final Gson gson = new Gson();
+    private static final Gson gson = new GsonBuilder().setDateFormat(PATTERN_TIME_STD).create();
 
     public static String toJson(Object object) {
         return GsonUtil.gson.toJson(object);
