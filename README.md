@@ -17,6 +17,8 @@ gradlew clean build -x test generatePomFileForMavenPublication publishMavenPubli
 - 0.0.9 update HttpClientUtil: 增加两个运行时异常抛出
 - 0.1.0 update HttpClientUtil: 可设置自定义的 builder
 - 0.1.2 update HttpClientUtil: 增加 header 设置
+- 0.1.3/4 update GsonUtil: 强制指定 Date 序列化格式
+
 
 ## tips
 1. version cannot conflict every time when you upload
